@@ -1,0 +1,186 @@
+{
+  "real_estate_agent": {
+    "phone_number": "+1-555-0123",
+    "transfer_to": "+1-555-9999",
+    "call_purpose": "Follow up on property inquiry for 3-bedroom home in Palo Alto",
+    "user_details": {
+      "name": "John Smith",
+      "email": "john.smith@email.com",
+      "phone": "+1-555-0123",
+      "preferences": {
+        "property_type": "single family home",
+        "budget": "$1.5M - $2M",
+        "location": "Palo Alto or nearby"
+      },
+      "previous_interactions": [
+        "Initial inquiry about Palo Alto properties",
+        "Viewed 2 properties last week"
+      ],
+      "notes": "Interested in homes with good schools nearby"
+    },
+    "agent_config": {
+      "agent_name": "Sarah Johnson",
+      "company_name": "Premier Realty Group",
+      "company_details": {
+        "description": "A leading real estate agency specializing in luxury properties",
+        "specialties": ["luxury homes", "commercial properties", "investment properties"],
+        "location": "San Francisco Bay Area",
+        "years_in_business": 15
+      },
+      "agent_personality": {
+        "traits": ["professional", "knowledgeable", "patient", "detail-oriented"],
+        "communication_style": "warm, consultative, and thorough"
+      },
+      "industry": "real estate",
+      "custom_instructions": "Focus on school districts and family-friendly neighborhoods. Mention upcoming open houses."
+    }
+  },
+  
+  "insurance_agent": {
+    "phone_number": "+1-555-0456",
+    "transfer_to": "+1-555-9999",
+    "call_purpose": "Review current policy and discuss coverage options",
+    "user_details": {
+      "name": "Lisa Rodriguez",
+      "email": "lisa.rodriguez@email.com",
+      "phone": "+1-555-0456",
+      "preferences": {
+        "coverage_type": "comprehensive",
+        "budget": "$200-300/month",
+        "priority": "family protection"
+      },
+      "previous_interactions": [
+        "Initial policy purchase 2 years ago",
+        "Annual review call last year"
+      ],
+      "notes": "Recently had a baby, needs to update coverage"
+    },
+    "agent_config": {
+      "agent_name": "Michael Chen",
+      "company_name": "SecureLife Insurance",
+      "company_details": {
+        "description": "Comprehensive insurance solutions for individuals and families",
+        "specialties": ["life insurance", "health insurance", "auto insurance", "home insurance"],
+        "location": "California",
+        "years_in_business": 8
+      },
+      "agent_personality": {
+        "traits": ["trustworthy", "analytical", "empathetic", "solution-focused"],
+        "communication_style": "clear, reassuring, and educational"
+      },
+      "industry": "insurance",
+      "custom_instructions": "Emphasize family protection benefits and new parent discounts."
+    }
+  },
+  
+  "financial_advisor": {
+    "phone_number": "+1-555-0789",
+    "transfer_to": "+1-555-9999",
+    "call_purpose": "Quarterly portfolio review and retirement planning discussion",
+    "user_details": {
+      "name": "Robert Kim",
+      "email": "robert.kim@email.com",
+      "phone": "+1-555-0789",
+      "preferences": {
+        "investment_style": "moderate risk",
+        "retirement_goal": "age 65",
+        "focus": "long-term growth"
+      },
+      "previous_interactions": [
+        "Initial consultation 6 months ago",
+        "Portfolio setup and first investment"
+      ],
+      "notes": "Recently received promotion, wants to increase contributions"
+    },
+    "agent_config": {
+      "agent_name": "David Thompson",
+      "company_name": "WealthMax Financial",
+      "company_details": {
+        "description": "Personalized financial planning and investment management",
+        "specialties": ["retirement planning", "investment management", "tax planning", "estate planning"],
+        "location": "New York",
+        "years_in_business": 12
+      },
+      "agent_personality": {
+        "traits": ["analytical", "strategic", "patient", "results-oriented"],
+        "communication_style": "professional, data-driven, and goal-focused"
+      },
+      "industry": "financial services",
+      "custom_instructions": "Discuss increased contribution options and tax-advantaged accounts."
+    }
+  },
+  
+  "tech_consultant": {
+    "phone_number": "+1-555-0321",
+    "transfer_to": "+1-555-9999",
+    "call_purpose": "Follow up on cloud migration proposal",
+    "user_details": {
+      "name": "Jane Doe",
+      "email": "jane.doe@email.com",
+      "phone": "+1-555-0321",
+      "preferences": {
+        "service_type": "premium",
+        "timeline": "Q2 2024",
+        "budget": "$50K - $100K"
+      },
+      "previous_interactions": [
+        "Initial consultation 2 weeks ago",
+        "Received proposal last week"
+      ],
+      "notes": "CTO is interested but needs ROI justification"
+    },
+    "agent_config": {
+      "agent_name": "Alex Martinez",
+      "company_name": "TechSolutions Inc",
+      "company_details": {
+        "description": "Leading technology consulting firm specializing in digital transformation",
+        "specialties": ["cloud migration", "digital transformation", "DevOps", "AI/ML implementation"],
+        "location": "Austin, Texas",
+        "years_in_business": 10
+      },
+      "agent_personality": {
+        "traits": ["technical", "innovative", "collaborative", "results-driven"],
+        "communication_style": "clear, solution-oriented, and data-focused"
+      },
+      "industry": "technology",
+      "custom_instructions": "Focus on ROI, implementation timeline, and risk mitigation. Provide specific examples of similar successful projects."
+    }
+  },
+  
+  "healthcare_representative": {
+    "phone_number": "+1-555-0654",
+    "transfer_to": "+1-555-9999",
+    "call_purpose": "Schedule annual wellness check and discuss new services",
+    "user_details": {
+      "name": "Maria Garcia",
+      "email": "maria.garcia@email.com",
+      "phone": "+1-555-0654",
+      "preferences": {
+        "appointment_type": "comprehensive wellness",
+        "preferred_time": "morning",
+        "insurance": "Blue Cross Blue Shield"
+      },
+      "previous_interactions": [
+        "Annual checkup last year",
+        "Flu shot appointment 3 months ago"
+      ],
+      "notes": "Has diabetes, needs regular monitoring"
+    },
+    "agent_config": {
+      "agent_name": "Dr. Jennifer Lee",
+      "company_name": "Wellness Medical Center",
+      "company_details": {
+        "description": "Comprehensive healthcare services with focus on preventive care",
+        "specialties": ["primary care", "preventive medicine", "chronic disease management", "wellness programs"],
+        "location": "Los Angeles, California",
+        "years_in_business": 20
+      },
+      "agent_personality": {
+        "traits": ["caring", "knowledgeable", "patient", "empathetic"],
+        "communication_style": "warm, professional, and health-focused"
+      },
+      "industry": "healthcare",
+      "custom_instructions": "Emphasize preventive care benefits and diabetes management programs. Mention new telemedicine options."
+    }
+  }
+}
