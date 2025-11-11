@@ -1,0 +1,52 @@
+[cerebrium.deployment]
+name = "phoenix-ai"
+python_version = "3.11"
+disable_auth = false
+include = ["*"]
+exclude = [".*", "*.db", "*.sqlite", "*.sqlite3", "__pycache__", ".venv", "venv", "tests", "*.pyc", "*.pyo", "*.pyd", ".pytest_cache", ".mypy_cache"]
+shell_commands = []
+pre_build_commands = []
+docker_base_image_url = "debian:bookworm-slim"
+use_uv = true
+
+[cerebrium.runtime.custom]
+port = 8000
+entrypoint = ["uv", "run", "python", "src/agent.py", "start"]
+healthcheck_endpoint = "/"
+readycheck_endpoint = "/"
+
+[cerebrium.hardware]
+cpu = 2
+memory = 4.0
+compute = "CPU"
+provider = "aws"
+region = "us-east-1"
+
+[cerebrium.scaling]
+min_replicas = 0
+max_replicas = 5
+replica_concurrency = 10
+response_grace_period = 3600
+cooldown = 1800
+scaling_metric = "concurrency_utilization"
+scaling_target = 100
+roll_out_duration_seconds = 0
+
+[cerebrium.dependencies.pip]
+livekit = ">=1.0"
+"livekit-agents[openai,deepgram,cartesia,silero,google,groq]" = "~=1.2"
+livekit-plugins-noise-cancellation = "~=0.2"
+livekit-plugins-turn-detector = "~=1.2"
+python-dotenv = "~=1.0"
+torch = ">=2.0.0"
+pydantic = ">=2.0.0"
+pydantic-core = ">=2.0.0"
+typing-extensions = ">=4.0.0"
+
+[cerebrium.dependencies.apt]
+gcc = "latest"
+g++ = "latest"
+python3-dev = "latest"
+curl = "latest"
+build-essential = "latest"
+

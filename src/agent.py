@@ -28,8 +28,11 @@ if not os.getenv("LIVEKIT_API_KEY"):
 import asyncio
 import logging
 import json
-from typing import Any
-
+from typing import Any, AsyncIterable
+from typing import Annotated, Callable, Optional, cast
+from pydantic import Field
+from pydantic_core import from_json
+from typing_extensions import TypedDict
 from livekit import rtc, api
 from livekit.agents import (
     AgentSession,
@@ -42,6 +45,10 @@ from livekit.agents import (
     cli,
     WorkerOptions,
     RoomInputOptions,
+    ChatContext,
+    FunctionTool,
+    ModelSettings,
+    NOT_GIVEN,
 )
 from livekit.plugins import (
     deepgram,
@@ -59,7 +66,37 @@ logger.setLevel(logging.INFO)
 
 outbound_trunk_id = os.getenv("SIP_OUTBOUND_TRUNK_ID")
 
+class ResponseEmotion(TypedDict):
+    voice_instructions: Annotated[
+        str,
+        Field(..., description="Concise TTS directive for tone, emotion, intonation, and speed"),
+    ]
+    response: str
 
+
+async def process_structured_output(
+    text: AsyncIterable[str],
+    callback: Optional[Callable[[ResponseEmotion], None]] = None,
+) -> AsyncIterable[str]:
+    last_response = ""
+    acc_text = ""
+    async for chunk in text:
+        acc_text += chunk
+        try:
+            resp: ResponseEmotion = from_json(acc_text, allow_partial="trailing-strings")
+        except ValueError:
+            continue
+
+        if callback:
+            callback(resp)
+
+        if not resp.get("response"):
+            continue
+
+        new_delta = resp["response"][len(last_response) :]
+        if new_delta:
+            yield new_delta
+        last_response = resp["response"]
 class PhonenixCaller(Agent):
     def __init__(
         self,
@@ -91,11 +128,53 @@ class PhonenixCaller(Agent):
     def prewarm(proc: JobProcess):
         proc.userdata["vad"] = silero.VAD.load()
 
-    async def on_enter(self, ctx: RunContext):
-        await ctx.session.generate_reply(
+    async def on_enter(self):
+        await self.session.generate_reply(
             instructions=f"Greet {self._user_name} warmly and introduce yourself as their real estate agent. Mention that you're calling regarding {self._call_purpose} and ask how you can help them today."
         )
+    async def llm_node(
+        self, chat_ctx: ChatContext, tools: list[FunctionTool], model_settings: ModelSettings
+    ):
+        # not all LLMs support structured output, so we need to cast to the specific LLM type
+        llm = cast(openai.LLM, self.llm)
+        tool_choice = model_settings.tool_choice if model_settings else NOT_GIVEN
+        async with llm.chat(
+            chat_ctx=chat_ctx,
+            tools=tools,
+            tool_choice=tool_choice,
+            response_format=ResponseEmotion,
+        ) as stream:
+            async for chunk in stream:
+                yield chunk
 
+    async def tts_node(self, text: AsyncIterable[str], model_settings: ModelSettings):
+        instruction_updated = False
+
+        def output_processed(resp: ResponseEmotion):
+            nonlocal instruction_updated
+            if resp.get("voice_instructions") and resp.get("response") and not instruction_updated:
+                # when the response isn't empty, we can assume voice_instructions is complete.
+                # (if the LLM sent the fields in the right order)
+                instruction_updated = True
+                logger.info(
+                    f"Applying TTS instructions before generating response audio: "
+                    f'"{resp["voice_instructions"]}"'
+                )
+
+                tts = cast(deepgram.TTS, self.tts)
+                tts.update_options(instructions=resp["voice_instructions"])
+
+        # process_structured_output strips the TTS instructions and only synthesizes the verbal part
+        # of the LLM output
+        return Agent.default.tts_node(
+            self, process_structured_output(text, callback=output_processed), model_settings
+        )
+
+    async def transcription_node(self, text: AsyncIterable[str], model_settings: ModelSettings):
+        # transcription_node needs to return what the agent would say, minus the TTS instructions
+        return Agent.default.transcription_node(
+            self, process_structured_output(text), model_settings
+        )
     async def hangup(self):
         """Helper function to hang up the call by deleting the room"""
 
@@ -140,14 +219,11 @@ class PhonenixCaller(Agent):
 
     @function_tool()
     async def end_call(self, ctx: RunContext):
-        """Called when the user wants to end the call"""
-        logger.info(f"ending the call for {self.participant.identity}")
-
+        """Called when the user wants to end the call, use this tool to end the call properly"""
+        participant_id = self.participant.identity if self.participant else "unknown"
+        logger.info(f"ending the call for {participant_id}")
         # let the agent finish speaking
-        current_speech = ctx.session.current_speech
-        if current_speech:
-            await current_speech.wait_for_playout()
-
+        await ctx.wait_for_playout()
         await self.hangup()
 
     @function_tool()

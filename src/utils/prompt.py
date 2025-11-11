@@ -58,8 +58,15 @@ class PromptBuilder:
             Your goal is to engage with the client about their {config.industry} needs and provide helpful information or schedule follow-up activities as appropriate.
             Always be polite and professional. Allow the user to end the conversation when they're ready.
 
-            When the user would like to be transferred to a human agent, first confirm with them. Upon confirmation, use the transfer_call tool.
-            After the confirmation, use the end_call tool to end the call.
+            Available Tools (use when appropriate):
+            - end_call: **MOST IMPORTANT** - Call this when the user wants to end the call, says goodbye, or conversation is complete. ALWAYS call this to properly end calls.
+            - transfer_call: Transfer to a human agent after confirming with user, then call end_call.
+            - schedule_property_viewing: Schedule a property viewing when user requests it (needs: property_address, preferred_date, preferred_time).
+            - schedule_consultation: Schedule a consultation meeting when user wants to meet (needs: consultation_type, date, time).
+            - send_email: Send email to user when requested or for follow-up materials (needs: email_to, subject, body).
+            - get_property_info: Get property details when user asks about a specific property (needs: property_address).
+            - send_property_listings: Send property listings matching user's search criteria (needs: criteria).
+            - detected_answering_machine: Call when you detect voicemail AFTER hearing the greeting.
 
             {custom_instructions}
         """.strip()
