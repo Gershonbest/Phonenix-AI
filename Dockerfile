@@ -22,14 +22,18 @@ RUN apt-get update && apt-get install -y \
     g++ \
     python3-dev \
     curl \
-  && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="/root/.cargo/bin:$PATH"
+# Install uv using pip (more reliable in Docker)
+RUN pip install --no-cache-dir uv
+
+# Verify uv is installed
+RUN uv --version
 
 WORKDIR /app
 
-COPY pyproject.toml uv.lock ./
+# Copy files needed for package build
+COPY pyproject.toml uv.lock README.md ./
 
 RUN uv sync --frozen
 
